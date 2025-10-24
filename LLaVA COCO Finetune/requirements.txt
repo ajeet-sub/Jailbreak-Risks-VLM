@@ -1,0 +1,8 @@
+transformers>=4.35.3
+datasets==2.16.0
+peft
+bitsandbytes
+accelerate
+pillow
+hf_transfer
+pycocotools
