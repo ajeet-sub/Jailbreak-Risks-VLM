@@ -1,0 +1,12 @@
+# Model checkpoints and weights
+*.safetensors
+checkpoint-*/
+llava-merged-finetune/
+llava-coco-finetuned/
+
+# Training artifacts
+wandb/
+.ipynb_checkpoints/
+
+# Results directories
+results_*/

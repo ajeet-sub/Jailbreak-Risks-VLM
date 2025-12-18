@@ -6,3 +6,4 @@ accelerate
 pillow
 hf_transfer
 pycocotools
+wandb

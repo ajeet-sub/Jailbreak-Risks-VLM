@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoProcessor, LlavaForConditionalGeneration, BitsAndBytesConfig, TrainingArguments, Trainer
+from transformers import AutoProcessor, LlavaForConditionalGeneration, BitsAndBytesConfig, TrainingArguments, Trainer, TrainerCallback
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from datasets import load_dataset
 from PIL import Image
@@ -7,18 +7,30 @@ import requests
 from io import BytesIO
 import random
 import os
+import wandb
 
+# -----------------------
 # Config
+# -----------------------
 MODEL_ID = "llava-hf/llava-1.5-7b-hf"
 DATASET_NAME = "yerevann/coco-karpathy"
 OUTPUT_DIR = "./llava-coco-finetuned"
+
 BATCH_SIZE = 2
 GRADIENT_ACCUMULATION_STEPS = 8
-NUM_EPOCHS = 3
-LEARNING_RATE = 2e-5
+NUM_EPOCHS = 5   
+LEARNING_RATE = 1e-4    # higher LR → larger updates
 MAX_LENGTH = 2048
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+# -----------------------
+# W&B init
+# -----------------------
+wandb.init(
+    project="llava-coco-lora",
+    name="llava_coco_strong_move",
+)
 
 print("Loading model and processor...")
 processor = AutoProcessor.from_pretrained(MODEL_ID)
@@ -41,16 +53,70 @@ model = LlavaForConditionalGeneration.from_pretrained(
 model = prepare_model_for_kbit_training(model)
 
 lora_config = LoraConfig(
-    r=8,
-    lora_alpha=16,
+    r=16,
+    lora_alpha=32,
     target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
-    lora_dropout=0.05,
+    lora_dropout=0.1,
     bias="none",
     task_type="CAUSAL_LM"
 )
 
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
+
+# -----------------------
+# Save initial trainable (LoRA) weights for movement tracking
+# -----------------------
+initial_trainable_params = {
+    name: p.detach().clone().cpu()
+    for name, p in model.named_parameters()
+    if p.requires_grad
+}
+
+# -----------------------
+# W&B callback to track weight movement
+# -----------------------
+class WeightMovementCallback(TrainerCallback):
+    def __init__(self, initial_params, log_every=10):
+        self.initial_params = initial_params
+        self.log_every = log_every
+
+    def on_step_end(self, args, state, control, **kwargs):
+        # Only log every `log_every` steps
+        if state.global_step == 0 or state.global_step % self.log_every != 0:
+            return
+
+        model = kwargs["model"]
+
+        total_delta_sq = 0.0
+        total_norm_sq = 0.0
+        count = 0
+
+        for name, p in model.named_parameters():
+            if not p.requires_grad:
+                continue
+
+            current = p.detach().float().cpu().view(-1)
+            initial = self.initial_params[name].float().view(-1)
+
+            delta = current - initial
+            total_delta_sq += torch.sum(delta * delta).item()
+            total_norm_sq += torch.sum(current * current).item()
+            count += 1
+
+        if count == 0:
+            return
+
+        weight_delta_l2 = total_delta_sq ** 0.5
+        weight_norm_l2 = total_norm_sq ** 0.5
+
+        wandb.log(
+            {
+                "weight_delta_l2": weight_delta_l2,
+                "weight_norm_l2": weight_norm_l2,
+            },
+            step=state.global_step,
+        )
 
 print("Loading COCO dataset...")
 dataset = load_dataset(DATASET_NAME)
@@ -167,7 +233,7 @@ def collate_fn(examples):
     }
 
 print("Preprocessing dataset...")
-train_dataset = dataset['train'].select(range(10000))  # Limit for faster training
+train_dataset = dataset['train'].select(range(10000))
 
 processed_data = []
 
@@ -186,7 +252,7 @@ training_args = TrainingArguments(
     num_train_epochs=NUM_EPOCHS,
     per_device_train_batch_size=BATCH_SIZE,
     gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS,
-    warmup_steps=100,
+    warmup_steps=50,                 # shorter warmup
     learning_rate=LEARNING_RATE,
     bf16=True,
     logging_steps=10,
@@ -196,7 +262,9 @@ training_args = TrainingArguments(
     remove_unused_columns=False,
     dataloader_pin_memory=False,
     gradient_checkpointing=True,
-    dataloader_num_workers=0,  # Avoid multiprocessing issues
+    dataloader_num_workers=0,        # Avoid multiprocessing issues
+    report_to=["wandb"],             # log to W&B
+    run_name="llava_coco_strong_move",
 )
 
 trainer = Trainer(
@@ -204,6 +272,7 @@ trainer = Trainer(
     args=training_args,
     train_dataset=processed_data,
     data_collator=collate_fn,
+    callbacks=[WeightMovementCallback(initial_trainable_params, log_every=10)],
 )
 
 print("Starting training...")
@@ -247,3 +316,4 @@ except Exception as e:
     print(f"Inference test failed: {e}")
 
 print("\nTraining complete!")
+wandb.finish()
