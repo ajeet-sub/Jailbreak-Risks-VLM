@@ -1,0 +1,47 @@
+# Core ML frameworks
+torch==2.0.0
+torchvision<0.15.2
+torchopt>=0.7.2,<0.8.0
+
+# Lightning
+lightning @ git+https://github.com/Lightning-AI/lightning@2.1.0.rc0
+
+# LLaVA (pulls in transformers, huggingface_hub, etc.)
+llava @ git+https://github.com/haotian-liu/LLaVA.git
+
+# HuggingFace
+datasets>=2.14.5,<3.0.0
+transformers
+
+# Image processing
+pillow>=10.0.0,<11.0.0
+
+# Tensor utilities
+einops>=0.6.1,<0.7.0
+jaxtyping>=0.2.21,<0.3.0
+
+# Experiment tracking and logging
+wandb>=0.15.10,<0.16.0
+tensorboard>=2.14.0,<3.0.0
+
+# Optimization and evaluation
+openai>=0.28.0,<0.29.0
+levenshtein>=0.21.1,<0.22.0
+
+# Data and visualization
+pandas
+matplotlib>=3.7.2,<4.0.0
+numpy
+
+# Utilities
+tqdm>=4.66.1,<5.0.0
+pathspec
+requests
+click
+attrs
+expecttest>=0.1.6,<0.2.0
+prettyprinter>=0.18.0,<0.19.0
+
+# Development / testing
+pytest>=7.4.2,<8.0.0
+black>=23.7.0,<24.0.0
