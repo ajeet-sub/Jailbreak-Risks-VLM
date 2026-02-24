@@ -48,6 +48,10 @@ class ContextAttack(AttackDriver, ABC):
         self.step = 0
 
     def training_step(self, batch, batch_idx):
+        # Lightning 2.1+ CombinedLoader may wrap batch in a tuple
+        if isinstance(batch, tuple):
+            batch = batch[0]
+
         def get_loss(
             parameters: Parameters,
         ) -> Tuple[Float[Tensor, ""], Dict[str, Float[Tensor, ""]]]:
@@ -228,6 +232,9 @@ class ContextAttack(AttackDriver, ABC):
             self.log(f"{prefix}_avg_{k}", v / self.cum_n, prog_bar=True)
 
     def validation_step(self, batch, batch_idx, dataloader_idx=0):
+        # Lightning 2.1+ CombinedLoader may wrap batch in a tuple
+        if isinstance(batch, tuple):
+            batch = batch[0]
         dataset = self.config.get_datamodule_names()[dataloader_idx]
         self.log_loss_and_accuracy(batch, f"val", dataset)
 
@@ -239,6 +246,9 @@ class ContextAttack(AttackDriver, ABC):
         self.save_tables_and_metrics("val")
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
+        # Lightning 2.1+ CombinedLoader may wrap batch in a tuple
+        if isinstance(batch, tuple):
+            batch = batch[0]
         dataset = self.config.get_datamodule_names()[dataloader_idx]
         self.log_loss_and_accuracy(batch, f"test", dataset)
 

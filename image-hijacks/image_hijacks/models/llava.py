@@ -285,6 +285,84 @@ class LlavaLens(AbstractLensModel):
             clean_up_tokenization_spaces=False,
         )
 
+    def _encode_images(
+        self, pixel_values: Float[Tensor, "b c h w"]
+    ) -> Float[Tensor, "b n_patches h_lm"]:
+        """Encode images through the vision tower and mm_projector.
+        This replicates what LLaVA does internally but allows us to call it
+        outside the model so we can build inputs_embeds manually."""
+        vision_tower = self.model.get_vision_tower()
+        image_features = vision_tower(pixel_values)
+        image_features = self.model.get_model().mm_projector(image_features)
+        return image_features
+
+    def _merge_image_text_embeddings(
+        self,
+        input_ids: Int64[Tensor, "b seq_len"],
+        attention_mask: Bool[Tensor, "b seq_len"],
+        image_features: Float[Tensor, "b n_patches h_lm"],
+    ) -> Tuple[Float[Tensor, "b new_seq_len h_lm"], Bool[Tensor, "b new_seq_len"]]:
+        """Manually merge image embeddings into the text embedding sequence,
+        replacing IMAGE_TOKEN_INDEX placeholders. This bypasses
+        prepare_inputs_labels_for_multimodal which uses torch.where and
+        crashes under torch.func.grad (functorch tensors lack storage)."""
+        b, seq_len = input_ids.shape
+        n_patches = image_features.shape[1]
+        embed_tokens = self.model.get_model().embed_tokens
+
+        # Build text embeddings — replace IMAGE_TOKEN_INDEX with 0 to avoid
+        # out-of-range embedding lookups, we'll overwrite those positions anyway
+        safe_ids = input_ids.clone()
+        image_mask = (safe_ids == IMAGE_TOKEN_INDEX)
+        safe_ids[image_mask] = 0
+        text_embeds = embed_tokens(safe_ids)
+
+        # For each sequence in the batch, splice image features into the text
+        # embeddings at the IMAGE_TOKEN_INDEX position.
+        new_embeds_list = []
+        new_attn_list = []
+        for i in range(b):
+            cur_ids = input_ids[i]
+            cur_attn = attention_mask[i]
+            cur_text_embeds = text_embeds[i]
+            cur_image_features = image_features[i] if image_features.shape[0] > 1 else image_features[0]
+
+            # Find image token positions (should be exactly 1 per sequence)
+            image_positions = (cur_ids == IMAGE_TOKEN_INDEX).nonzero(as_tuple=True)[0]
+
+            if len(image_positions) == 0:
+                # No image token — just use text embeddings
+                new_embeds_list.append(cur_text_embeds)
+                new_attn_list.append(cur_attn)
+                continue
+
+            pos = image_positions[0].item()
+
+            # Split: [before_image] + [image_features] + [after_image]
+            before = cur_text_embeds[:pos]
+            after = cur_text_embeds[pos + 1:]
+            merged = torch.cat([before, cur_image_features, after], dim=0)
+            new_embeds_list.append(merged)
+
+            before_attn = cur_attn[:pos]
+            after_attn = cur_attn[pos + 1:]
+            image_attn = torch.ones(n_patches, device=cur_attn.device, dtype=cur_attn.dtype)
+            merged_attn = torch.cat([before_attn, image_attn, after_attn], dim=0)
+            new_attn_list.append(merged_attn)
+
+        # Pad to same length
+        max_len = max(e.shape[0] for e in new_embeds_list)
+        h = new_embeds_list[0].shape[-1]
+        padded_embeds = torch.zeros(b, max_len, h, device=text_embeds.device, dtype=text_embeds.dtype)
+        padded_attn = torch.zeros(b, max_len, device=attention_mask.device, dtype=attention_mask.dtype)
+        for i in range(b):
+            cur_len = new_embeds_list[i].shape[0]
+            # Right-align (pad on left) to match LLaVA convention for left-padded inputs
+            padded_embeds[i, max_len - cur_len:] = new_embeds_list[i]
+            padded_attn[i, max_len - cur_len:] = new_attn_list[i]
+
+        return padded_embeds, padded_attn
+
     def get_logits_end_to_end(
         self,
         pixel_values: Float[Tensor, "b c h w"],
@@ -295,14 +373,13 @@ class LlavaLens(AbstractLensModel):
         decoder_attention_mask: Optional[Bool[Tensor, "b tgt_seq_len"]] = None,
     ) -> Float[Tensor, "b tgt_seq_len n_tokens"]:
         assert image_attention_mask is None
-        # TODO: once we've implemented embeddings, remove this impl and rely on
-        # superclass impl
         # NOTE: We strip BOS token for decoder
         input_ids = torch.cat([tokens, decoder_input_ids[:, 1:]], dim=1)
         attention_mask = torch.cat(
             [token_attention_mask, decoder_attention_mask[:, 1:]], dim=1
         )
 
+        # Shift left-padded tokens to right-padded for the model
         padding_idxs_left = 1 - torch.cumsum(
             input_ids == self.tokenizer.convert_tokens_to_ids("<s>"), dim=1
         )
@@ -316,12 +393,24 @@ class LlavaLens(AbstractLensModel):
             pixel_values = repeat(
                 pixel_values, "() c h w -> b c h w", b=right_shift_toks.shape[0]
             )
+
+        # Bypass prepare_inputs_labels_for_multimodal by computing
+        # inputs_embeds manually. This avoids torch.where on IMAGE_TOKEN_INDEX
+        # which crashes under torch.func.grad (functorch tensors lack storage).
+        normalized_pixels = self.normalize_image(pixel_values)
+        image_features = self._encode_images(normalized_pixels)
+        inputs_embeds, merged_attn_mask = self._merge_image_text_embeddings(
+            right_shift_toks, right_shift_attn_masks, image_features
+        )
+
+        # Call the base LLaMA model directly with inputs_embeds
+        # (no input_ids, no images — bypasses prepare_inputs_labels_for_multimodal)
         logits = self.model.forward(
-            images=self.normalize_image(pixel_values),
-            input_ids=right_shift_toks,
-            attention_mask=right_shift_attn_masks,
+            inputs_embeds=inputs_embeds,
+            attention_mask=merged_attn_mask,
         ).logits
 
+        # Map logits back to left-padded layout
         result_padding_idxs_right = F.pad(
             padding_idxs_right,
             (logits.shape[1] - padding_idxs_right.shape[1], 0, 0, 0),
@@ -363,8 +452,8 @@ class LlavaLens(AbstractLensModel):
         for i in range(tokens.shape[0]):
             model_ids.append(
                 self.model.generate(  # type: ignore
+                    inputs=tokens[i : i + 1, n_padding_idxs_left[i] :],
                     images=normalized_pixels[i : i + 1],
-                    input_ids=tokens[i : i + 1, n_padding_idxs_left[i] :],
                     attention_mask=token_attention_mask[
                         i : i + 1, n_padding_idxs_left[i] :
                     ],
@@ -431,6 +520,24 @@ class LlavaLens(AbstractLensModel):
     # === Loading model ===
 
     @classmethod
+    def _patch_config_for_transformers(cls, cfg_pretrained):
+        """Ensure config has fields required by transformers 4.37.2+.
+        Older LLaVA v1.3 checkpoints may be missing these; v1.5 checkpoints
+        should already have them, but we add safe defaults just in case."""
+        defaults = {
+            "attention_dropout": 0.0,
+            "rope_theta": 10000.0,
+            "rope_scaling": None,
+            "pretraining_tp": 1,
+            "mlp_bias": False,
+            "attention_bias": False,
+        }
+        for key, value in defaults.items():
+            if not hasattr(cfg_pretrained, key):
+                setattr(cfg_pretrained, key, value)
+        return cfg_pretrained
+
+    @classmethod
     def load_model_from_path(
         cls: "Type[LlavaLensT]",
         model_path: Path,
@@ -443,6 +550,8 @@ class LlavaLens(AbstractLensModel):
             requires_grad -- Whether to compute gradients for model params
         """
         cfg_pretrained = AutoConfig.from_pretrained(model_path)
+        cfg_pretrained = cls._patch_config_for_transformers(cfg_pretrained)
+
         model: LlavaLlamaForCausalLM = load_model_with_cache(  # type: ignore
             model_fn=lambda: LlavaLlamaForCausalLM.from_pretrained(
                 model_path,
@@ -573,6 +682,35 @@ class LlavaLlama2_7b(LlavaLens):
     ) -> "LlavaLlama2_7b":
         return cls.load_model_from_path(
             PROJECT_ROOT / "downloads/model_checkpoints/llava-llama-1.5-7b",
+            model_dtype=model_dtype,
+            requires_grad=requires_grad,
+        )
+
+
+class LlavaV1_5_7b(LlavaLens):
+    """LLaVA v1.5-7b wrapper. Uses the vicuna-style system prompt."""
+
+    def wrap_with_system_prompt(self, random: bool = False) -> Callable[[str], str]:
+        if random:
+            return super().wrap_with_system_prompt(random)
+        else:
+            return lambda text: (
+                f"A chat between a curious user and an artificial intelligence assistant. "
+                f"The assistant gives helpful, detailed, and polite answers to the user's questions. "
+                f"USER: {LlavaLens.IMAGE_TOKEN}\n{text} ASSISTANT:"
+            )
+
+    @classmethod
+    def load_model(
+        cls,
+        model_dtype: torch.dtype = torch.half,
+        requires_grad: bool = False,
+        model_path: Optional[Path] = None,
+    ) -> "LlavaV1_5_7b":
+        if model_path is None:
+            model_path = PROJECT_ROOT / "downloads/model_checkpoints/llava-v1.5-7b"
+        return cls.load_model_from_path(
+            model_path,
             model_dtype=model_dtype,
             requires_grad=requires_grad,
         )

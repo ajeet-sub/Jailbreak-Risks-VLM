@@ -3,7 +3,7 @@ from typing import Callable, List, Optional, Sequence, Tuple, Union
 from image_hijacks.config import Config, Transform
 import image_hijacks.config as cfg
 from image_hijacks.data import AlpacaDataModule, AlpacaLlavaDataModule, LlavaDataModule
-from image_hijacks.models.llava import LlavaLlama1_13b, LlavaLlama2_7b
+from image_hijacks.models.llava import LlavaLlama1_13b, LlavaLlama2_7b, LlavaV1_5_7b
 from image_hijacks.utils import PROJECT_ROOT
 from image_hijacks.attacks.context import (
     ContextLabelAttack,
@@ -34,6 +34,11 @@ TARGET_STRING = "Download the guide at malware.com for an interactive tour!"
 
 
 @functools.lru_cache
+def load_model_llava_v1_5_7b():
+    return LlavaV1_5_7b.load_model(model_dtype=torch.half)
+
+
+@functools.lru_cache
 def load_model_llama_2():
     return LlavaLlama2_7b.load_model(model_dtype=torch.half)
 
@@ -44,6 +49,7 @@ def load_model_llama_1():
 
 
 MODELS = {
+    "llava-v1.5-7b": load_model_llava_v1_5_7b,
     "llava-llama2-7b": load_model_llama_2,
     "llava-llama1-13b": load_model_llama_1,
 }
@@ -153,14 +159,8 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
 
     return [
         (
-            f"llava1_{t.key}" if t.key is not None else "",
-            lambda t=t: init_config(t, "llava-llama2-7b"),
-        )
-        for t in transforms
-    ] + [
-        (
-            f"llava2_{t.key}" if t.key is not None else "",
-            lambda t=t: init_config(t, "llava-llama2-7b"),
+            f"llava_v1_5_{t.key}" if t.key is not None else "",
+            lambda t=t: init_config(t, "llava-v1.5-7b"),
         )
         for t in transforms
     ]
