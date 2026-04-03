@@ -1,0 +1,101 @@
+idx,question,generated_answer,ground_truth,response_length,response_word_count
+0,What sport can you use this for?,"This motorcycle can be used for off-road motorcycling, also known as dirt biking. The image shows a black motorcycle parked on a dirt road, which suggests that it is designed for off-road riding","['racing', 'racing', 'racing', 'racing', 'racing']",194,33
+1,Name the type of plant this is?,ivy,"['vine', 'vine', 'vine', 'vine', 'climbing']",3,1
+2,What toy is this?,teddy bear,"['stuffed animal', 'stuffed animal', 'stuffed animal', 'stuffed animal', 'stuffed animal']",10,2
+3,Which part of this animal would be in use of it was playing the game that is played with the items the man is holding?,The dog's front legs would be in use if it were playing the game that involves holding and throwing a frisbee.,"['mouth', 'mouth', 'mouth', 'mouth', 'mouth']",110,21
+4,What could this gentleman be carrying in that red bag?,"The gentleman in the image is carrying a red bag while walking down the street. It is not possible to determine the exact contents of the bag from the image alone, but it could be carrying various items such as groceries, personal belongings,","['clothes', 'clothes', 'clothes', 'clothes', 'food']",242,43
+5,Who leaves a toilet like this?,a person who is not using it,"['man', 'man', 'man', 'man', 'man']",28,7
+6,A center affixed unit like this one in a kitchen is called a what?,island,"['island', 'island', 'island', 'island', 'island']",6,1
+7,Why might someone go to this place?,"Someone might go to this place to experience the bustling city life, as it is a busy street with many people walking around. The street is filled with pedestrians, some of whom are carrying backpacks and handbags","['shopping', 'shopping', 'shopping', 'shopping', 'nyc']",212,37
+8,What does this grow from?,lily bulbs,"['ground', 'ground', 'ground', 'ground', 'plant']",10,2
+9,What is that man doing with the bat?,The man is swinging the bat at a ball during a baseball game.,"['swinging', 'swinging', 'swinging', 'swinging', 'swing']",61,13
+10,Is this at a salt water beach or a lake?,This is at a salt water beach.,"['salt water beach', 'salt water beach', 'salt water beach', 'salt water beach', 'salt water']",30,7
+11,Who designed the statues?,the statues were designed by a sculptor named John Sewall,"['artist', 'artist', 'artist', 'artist', 'guell']",57,10
+12,What is the name of the items the hot dog are topped with?,the hot dogs are topped with onions and peppers,"['condiments', 'condiments', 'condiments', 'condiments', 'onions relish']",47,9
+13,What is this desk used for?,"This desk is used for work and productivity, as it is equipped with a laptop, a keyboard, a mouse, and a telephone. The presence of multiple screens and devices suggests that the user may be involved in tasks that require mult","['working', 'working', 'working', 'working', 'computing']",226,41
+14,What type of bike is on the ground?,a dirt bike,"['bmx', 'bmx', 'bmx', 'bmx', 'bicycle']",11,3
+15,What type of plane is that?,"The plane in the image is a commercial airliner, which is used for transporting passengers and cargo.","['commercial', 'commercial', 'commercial', 'commercial', 'passenger']",101,17
+16,Is this a room for a boy or girl?,This is a room for a girl.,"['girl', 'girl', 'girl', 'girl', 'girl']",26,7
+17,In what year was this desert first introduced?,The doughnut was first introduced in 1906.,"['1847', '1847', '1847', '1847', '1860']",42,7
+18,What is this surf trick called?,"The surf trick being performed in the image is called a ""knee drop.""","['riding', 'riding', 'riding', 'riding', 'tube ride']",68,13
+19,What do they call running around the bases on a single hit?,"When a batter hits the ball and runs around the bases, it is called a single.","['homerun', 'homerun', 'homerun', 'homerun', 'homerun']",77,16
+20,Why is this plugged in?,The laptop is plugged in to charge its battery.,"['charging', 'charging', 'charging', 'charging', 'to have power and work']",47,9
+21,What is the shape?,The shape is a circle.,"['circle', 'circle', 'circle', 'circle', 'circle']",22,5
+22,What is the horsepower of the truck pulling the load?,The truck pulling the load is a 1000 horsepower truck.,"['510', '510', '510', '510', '510']",54,10
+23,What kind of skiing is this person engaged in?,The person in the image is engaged in cross-country skiing. They are wearing a backpack and holding ski poles while standing on a snowy surface. Cross-country skiing is a form of skiing that focuses on end,"['cross country', 'cross country', 'cross country', 'cross country', 'cross country']",205,36
+24,What is the person in the photo wearing?,The person in the photo is wearing a wetsuit.,"['wetsuit', 'wetsuit', 'wetsuit', 'wetsuit', 'suit']",45,9
+25,What is the name of the board he is on?,surfboard,"['surf board', 'surf board', 'surf board', 'surf board', 'surfboard']",9,1
+26,Name the material used to make this car seat shown in this picture?,leather,"['cloth', 'cloth', 'cloth', 'cloth', 'nylon']",7,1
+27,What part of the face is the toothbrush in?,the mouth,"['mouth', 'mouth', 'mouth', 'mouth', 'mouth']",9,2
+28,What flavor is this pastry?,"The pastry is a sweet pastry, possibly a cake or a dessert.","['blueberry', 'blueberry', 'blueberry', 'blueberry', 'cream cheese']",59,12
+29,What kind of container are the flowers in?,The flowers are in vases.,"['vase', 'vase', 'vase', 'vase', 'vase']",25,5
+30,What country does this appear to be?,this appears to be a british countryside,"['scotland', 'scotland', 'scotland', 'scotland', 'scotland']",40,7
+31,Which of the foods in the picture is best for you to eat when you have a cold?,The food that is best for you to eat when you have a cold is the bowl of soup. Soup is a warm and comforting meal that can help soothe your throat and provide hydration. It is also easy to,"['soup', 'soup', 'soup', 'soup', 'soup']",188,40
+32,What do teenage pranksters do to this animal?,"Teenage pranksters often play pranks on cows by tipping over their feeding troughs or spraying them with water. In the image, a group of cows is grazing in a field, and some of","['tip', 'tip', 'tip', 'tip', 'tip']",176,33
+33,How many watts is that microwave?,The microwave is 1000 watts.,"['800', '800', '800', '800', '120']",28,5
+34,What is this type of blanket called?,quilt,"['quilt', 'quilt', 'quilt', 'quilt', 'quilt']",5,1
+35,What south american country usually has this climate?,Brazil,"['brazil', 'brazil', 'brazil', 'brazil', 'brazil']",6,1
+36,What american restaurant features an open kitchen with visible cooking area such as this?,"The american restaurant that features an open kitchen with visible cooking area is called ""IHOP"" (International House of Pancakes).","['diner', 'diner', 'diner', 'diner', 'diner']",131,19
+37,What other big vehicle is often painted about the same shade as this vehicle?,fire trucks are often painted in a similar shade as the red train in the image. Both vehicles are used for transportation and are easily recognizable due to their distinctive colors.,"['firetruck', 'firetruck', 'firetruck', 'firetruck', 'firetruck']",182,31
+38,What brand is this wine?,This wine is a Beckers vineyards wine.,"['becker vineyards', 'becker vineyards', 'becker vineyards', 'becker vineyards', 'becker vineyard']",38,7
+39,What would happen if these items fall to the ground?,"If these items, which include vases, cups, and glasses, were to fall to the ground, they would likely break or shatter. The vases and cups are made of glass, which is a fragile material that can","['shatter', 'shatter', 'shatter', 'shatter', 'they would shatter']",194,36
+40,What brand of suit is the man in the image wearing?,The man in the image is wearing a suit from the brand Armani.,"['brooks brothers', 'brooks brothers', 'brooks brothers', 'brooks brothers', 'gorgio armani']",61,13
+41,Where might i buy a print that resembles this photo?,"You might find a print that resembles this photo at an art gallery, a local artist's studio, or an online marketplace that sells artwork. The image features a woman walking down a street at night, holding an umbre","['gallery', 'gallery', 'gallery', 'gallery', 'store']",213,38
+42,What are the rolled black food items called?,The rolled black food items are called sushi.,"['sushi', 'sushi', 'sushi', 'sushi', 'sushi']",45,8
+43,What type of bird is this?,This is a blue jay.,"['blue jay', 'blue jay', 'blue jay', 'blue jay', 'bluebird']",19,5
+44,How can you tell that the people are not upset?,"In the image, the people are not upset because they are smiling and laughing while sitting around a table with a pizza. Their facial expressions and body language indicate that they are enjoying themselves and having a good time. This suggests","['they are smiling', 'they are smiling', 'they are smiling', 'they are smiling', 'smiles']",243,41
+45,How fast is the vehicle pictured capable of reaching?,"The vehicle pictured is a train, and it is capable of reaching speeds of up to 100 mph (160 km/h).","['80 mph', '80 mph', '80 mph', '80 mph', '100 mph']",98,20
+46,Name the type of hat the man is wearing?,sombrero,"['cowboy', 'cowboy', 'cowboy', 'cowboy', 'sombrero']",8,1
+47,What sates are these grown in?,These oranges are grown in Florida.,"['florida california', 'florida california', 'florida california', 'florida california', 'california']",35,6
+48,How does the bread taste?,"The bread tastes like cake, which is a common characteristic of cake bread.","['good', 'good', 'good', 'good', 'like bread']",75,13
+49,What is this type of mack truck used for?,"The mack truck in the image is a cement mixer, which is used for transporting and delivering cement to construction sites. It is designed to carry large quantities of cement and is equipped with a cement mixer","['cement', 'cement', 'cement', 'cement', 'cement']",209,37
+50,What type of platform should this vehicle be on?,"The vehicle should be on a train platform, which is a designated area for passengers to board and disembark trains. The train platform is typically located at train stations and is designed to facilitate safe and efficient passenger movement.","['tracks', 'tracks', 'tracks', 'tracks', 'tracks']",242,39
+51,What is the term for the effect used in this photo?,"the term for the effect used in this photo is called ""close-up"" or ""macro"" photography.","['fisheye', 'fisheye', 'fisheye', 'fisheye', 'reflection']",87,15
+52,What is the small white outdoor house like building called?,The small white outdoor house like building is called a gazebo.,"['gazebo', 'gazebo', 'gazebo', 'gazebo', 'gazebo']",63,11
+53,What can the woman do with this toy?,"The woman can play with the frisbee toy by throwing and catching it. She can also use it for recreational activities, such as playing frisbee golf or ultimate frisbee with friends or family. The","['throw it', 'throw it', 'throw it', 'throw it', 'throw it']",194,34
+54,Is this boy a professional player or still in high school?,The boy is a professional tennis player.,"['high school', 'high school', 'high school', 'high school', 'high school']",40,7
+55,What is the decorative fabric on the floor called?,area rug,"['rug', 'rug', 'rug', 'rug', 'rug']",8,2
+56,Is this in a home kitchen or commercial kitchen?,This is in a commercial kitchen.,"['commercial', 'commercial', 'commercial', 'commercial', 'commercial']",32,6
+57,Which type of helmet is used by the sport person shown in this picture?,the sport person in this picture is wearing a batting helmet,"['batters', 'batters', 'batters', 'batters', 'batting helmet']",60,11
+58,Which brand of slipper is shown in this picture?,Crocs,"['birkenstock', 'birkenstock', 'birkenstock', 'birkenstock', 'birkenstock']",5,1
+59,Who directed the 2012 movie shown on the television in the picture?,Joss Whedon directed the 2012 movie shown on the television in the picture.,"['joss whedon', 'joss whedon', 'joss whedon', 'joss whedon', 'joss whedon']",75,13
+60,What time of day is it?,It is dinner time.,"['noon', 'noon', 'noon', 'noon', 'afternoon']",18,4
+61,Is this bathroom high or low end?,"This bathroom is high end, featuring a large bathtub, a sink, and a large mirror.","['high', 'high', 'high', 'high', 'high']",81,15
+62,Name one famous person whom also has a black and white one of these?,grumpy cat,"['taylor swift', 'taylor swift', 'taylor swift', 'taylor swift', 'russell brand']",10,2
+63,Which item in this room is usually to wash hands?,sink,"['sink', 'sink', 'sink', 'sink', 'sink']",4,1
+64,What are the white objects on this animals head called?,horns,"['horns', 'horns', 'horns', 'horns', 'horns']",5,1
+65,Which airline has this insignia?,Saudia,"['kuwait airways', 'kuwait airways', 'kuwait airways', 'kuwait airways', 'united']",6,1
+66,When was the cola brand on the signs founded?,The cola brand on the signs was founded in 1898.,"['1892', '1892', '1892', '1892', '1851']",48,10
+67,What type of hat is this gentleman wearing?,The gentleman is wearing a top hat.,"['top', 'top', 'top', 'top', 'top hat']",35,7
+68,What character does this clock look like?,The clock looks like Mickey Mouse.,"['mickey mouse', 'mickey mouse', 'mickey mouse', 'mickey mouse', 'mickey mouse']",34,6
+69,What fruit comes from these trees?,palm trees,"['coconut', 'coconut', 'coconut', 'coconut', 'coconut']",10,2
+70,What type of skiing is being done here?,the two people are doing cross country skiing,"['cross country', 'cross country', 'cross country', 'cross country', 'cross country']",45,8
+71,What is this animal famously known for?,"The giraffe is famously known for its long neck and legs, which allow it to reach high branches and leaves for food.","['long neck', 'long neck', 'long neck', 'long neck', 'long neck']",116,22
+72,Are these animals mammals or insects?,"These animals are mammals, specifically cows.","['mammals', 'mammals', 'mammals', 'mammals', 'mammals']",45,6
+73,If it gets cold enough what will happen to the area being stepped over?,"If the temperature gets cold enough, the area being stepped over could freeze, creating a layer of ice on the ground. This can make it difficult for people to walk on the surface and increase the risk of slipping and falling. In extreme cases","['freeze', 'freeze', 'freeze', 'freeze', 'frozen']",242,44
+74,How tall do these animals get?,Giraffes can grow up to 18 feet tall.,"['20 feet', '20 feet', '20 feet', '20 feet', '8 feey']",37,8
+75,What is the breed of this cat?,The cat is a calico cat.,"['american shorthair', 'american shorthair', 'tabby', 'tabby', 'tortoise shell']",24,6
+76,Is this fruit or veggies?,This is a salad with vegetables and fruit.,"['veggies', 'veggies', 'veggies', 'veggies', 'vegetable']",42,8
+77,Why so many green vegetables?,"The presence of many green vegetables in the image suggests that the person is preparing a meal that incorporates a variety of nutrients and flavors. Green vegetables are known for their high nutritional value, including vitamins","['healthy', 'healthy', 'healthy', 'healthy', 'make salad']",229,36
+78,What unpleasant emotional state does this weather phenomenon often cause?,"the weather phenomenon of lightning often causes feelings of unease, fear, or anxiety in people. This is because lightning is a powerful and unpredictable force of nature that can strike without warning, causing damage to property and posing","['depression', 'depression', 'depression', 'depression', 'shock']",241,38
+79,What kind of oven is on the table?,there is a stove top oven on the table,"['toaster', 'toaster', 'toaster', 'toaster', 'toaster']",38,9
+80,How do people use this?,"People use the sailboat for recreational purposes, such as sailing, cruising, and enjoying the water. In the image, a woman is standing on the deck of the sailboat, which is floating on the water. The","['sail', 'sail', 'sail', 'sail', 'sailing']",200,35
+81,What small cloth is used to wipe the face or eating this meal?,napkin,"['napkin', 'napkin', 'napkin', 'napkin', 'napkin']",6,1
+82,What is this truck moving?,The truck is moving a refrigerator.,"['furniture', 'furniture', 'furniture', 'furniture', 'furniture']",35,6
+83,Which phase is that moon in?,full moon,"['half', 'half', 'half', 'half', 'half']",9,2
+84,What kind of animal is clearly displayed on the cover of this bed?,a deer,"['deer', 'deer', 'deer', 'deer', 'deer']",6,2
+85,What is a type of horseback sport?,polo is a type of horseback sport.,"['polo', 'polo', 'polo', 'polo', 'racing']",34,7
+86,What item might be used to warm this item of furniture?,"A blanket or a comforter can be used to warm the bed in the image. The bed is made with a white comforter and a brown pillow, and it is placed in a bedroom with a lamp and a booksh","['electric blanket', 'electric blanket', 'electric blanket', 'electric blanket', 'blanker']",180,40
+87,What fills the balloons?,helium,"['helium', 'helium', 'helium', 'helium', 'helium']",6,1
+88,Would this article of furniture typically be for public or private use?,"This article of furniture, a park bench, is typically for public use. It is designed for people to sit and rest while enjoying the outdoors, such as in a park or a public space. In the image, two children","['public', 'public', 'public', 'public', 'public']",204,39
+89,How many passengers can this plane accomodate?,The plane in the image can accommodate 10 passengers.,"['15', '15', '15', '15', '10']",53,9
+90,What knocked the guy off his chair?,The guy was knocked off his chair by a wave in the water.,"['wave', 'wave', 'wave', 'wave', 'wave']",57,13
+91,What is the purpose of the logos on this truck?,The logos on the truck serve as advertisements for the company that owns the truck. The logos are placed on the truck to increase brand visibility and promote the company's products or services. By having the logos,"['identification', 'identification', 'identification', 'identification', 'advertising']",214,37
+92,What is the purpose of these objects?,"The purpose of these objects, which are vases or urns, is to serve as decorative elements in the park. They are placed on the grass, creating an aesthetically pleasing environment for visitors to enjoy. The vases come","['art', 'art', 'art', 'art', 'memorial']",217,37
+93,What happens here?,"In the image, a white dog and a black and white dog are laying on a bed together. They are both wearing sweaters, which suggests that they are likely pets and their owners have dressed them up for warmth or comfort","['sleep', 'sleep', 'sleep', 'sleep', 'sleep']",214,41
+94,What company is this plane flying for?,The plane is flying for One World airlines.,"['oneworld', 'oneworld', 'oneworld', 'oneworld', '1 world']",43,8
+95,Name the type of curtains shown in this picture?,sheer curtains,"['drapes', 'drapes', 'drapes', 'drapes', 'rod pocket curtains']",14,2
+96,What animal does the meat on the pizza come from?,the meat on the pizza comes from a cow,"['pig', 'pig', 'pig', 'pig', 'pig']",38,9
+97,How do you turn this on?,"To turn on the motorcycle, you need to press the starter button, which is usually located on the handlebars or the side of the bike. Once the starter button is pressed, the motorcycle's engine will start and the","['key', 'key', 'key', 'key', 'key']",211,38
+98,How tall is this animal usually?,"Giraffes are usually tall, with adult males reaching heights of up to 18 feet and females up to 14 feet.","['20 feet', '20 feet', '20 feet', '20 feet', '12 ft']",104,20
+99,How much tomato sauce is in this dish?,"The dish has a lot of tomato sauce, as it is described as a deep dish pizza with a lot of sauce.","['2 cups', '2 cups', '2 cups', '2 cups', 'half cup']",96,22
